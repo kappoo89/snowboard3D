@@ -1,0 +1,91 @@
+body {
+	margin: 0px;
+	font-family: sans-serif;
+	background: rgba(255,255,255,1);
+	background: -moz-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(201,201,201,1) 100%);
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(255,255,255,1)), color-stop(47%, rgba(246,246,246,1)), color-stop(100%, rgba(201,201,201,1)));
+	background: -webkit-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(201,201,201,1) 100%);
+	background: -o-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(201,201,201,1) 100%);
+	background: -ms-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(201,201,201,1) 100%);
+	background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(201,201,201,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#c9c9c9', GradientType=1 );
+}
+
+#menu-icon{
+	height: 50px;
+	width: 50px;
+	position: fixed;
+	top: 0;
+	right: -50px;
+	background-image: url(assets/imgs/plus.png);	
+	background-size: contain;
+	display: none;
+	z-index: 4;
+}
+
+#progress {
+	height: 300px;
+	width: 400px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-top: -150px;
+	margin-left: -200px;
+	background-image: url(assets/imgs/hex-loader.gif);
+}
+
+#info{
+	height: 89%;
+	width: 23%;
+	position: fixed;
+	right: -25%;	
+	top:0;			
+	background-color: rgba(0,0,0,0.5);
+	color:#fff;
+	padding: 1%;
+	cursor: default;
+	overflow: scroll;
+	padding-bottom: 10%;
+}
+
+#brand{
+	font-size: 12px;
+	margin-bottom: 1%;	
+	font-weight: 100;	
+	letter-spacing: 4px;					
+}
+
+#title{
+	font-size: 35px;
+	margin-bottom: 10%;	
+	font-weight: 900;	
+	letter-spacing: 4px;					
+}
+
+#text{
+	font-size: 15px;
+	margin-bottom: 20%;	
+}
+
+#size{
+	font-size: 20px;
+	margin-bottom: 10%;	
+	text-decoration: underline;
+}
+
+#sizes span{
+	padding: 5px 10px;
+	border: 1px solid white;
+	margin-right: 1%;
+}
+
+@media only screen and (max-device-width: 800px) and (orientation : portrait) {
+	#info{
+		display: none;
+	}
+	
+	#menu-icon{
+		display: block;
+	}
+	
+}
