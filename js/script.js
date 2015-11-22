@@ -15,10 +15,12 @@ $( document ).ready(function() {
 			        $( "#menu-icon" ).css({
 			            transform: "rotate(" + now + "deg)"
 			        });
+			    },
+			    complete: function() {
+		 			$( "#menu-icon" ).css('background-image', 'url(assets/imgs/x.png)');
 			    }
 			});
 
-		 	$( "#menu-icon" ).css('background-image', 'url(assets/imgs/x.png)');
 
 	 	}else{		 	
 		 	$( "#info" ).animate({
@@ -33,10 +35,12 @@ $( document ).ready(function() {
 			        $( "#menu-icon" ).css({
 			            transform: "rotate(" + now + "deg)"
 			        });
+			    },
+			    complete: function() {
+		 			$( "#menu-icon" ).css('background-image', 'url(assets/imgs/plus.png)');
 			    }
 			});
 
-		 	$( "#menu-icon" ).css('background-image', 'url(assets/imgs/plus.png)');
 
 	 	}
 	 	
