@@ -4,24 +4,40 @@ $( document ).ready(function() {
 	 	
 	 	if($( "#info" ).css('display')=='none'){
 		 	$( "#info" ).show();
-		 	$( "#info" ).css({right: '-100%', width: '90%', height: '80%', padding:'5%', paddingBottom:'20%'});							
+		 	$( "#info" ).css({right: '-100%', width: '100%', height: '100%'});
 			$( "#info" ).animate({
 				right: 0
-			}, 500, function() {});
-			
-			$( "#menu-icon" ).animate({
-				backgroundColor: 'lime'
-			}, 500, function() {});
-	 	}else{
-		 	
+			}, 500, function() {});	
+
+			$({deg: 0}).animate({deg: 45}, {
+			    duration: 500,
+			    step: function(now){
+			        $( "#menu-icon" ).css({
+			            transform: "rotate(" + now + "deg)"
+			        });
+			    }
+			});
+
+		 	$( "#menu-icon" ).css('background-image', 'url(assets/imgs/x.png)');
+
+	 	}else{		 	
 		 	$( "#info" ).animate({
 				right: '-100%'
 			}, 500, function() {
 				$( "#info" ).hide();
 			});
-			
-		 	
-			
+
+			$({deg: 45}).animate({deg: 0}, {
+			    duration: 500,
+			    step: function(now){
+			        $( "#menu-icon" ).css({
+			            transform: "rotate(" + now + "deg)"
+			        });
+			    }
+			});
+
+		 	$( "#menu-icon" ).css('background-image', 'url(assets/imgs/plus.png)');
+
 	 	}
 	 	
 	});    

@@ -35,42 +35,44 @@ body {
 }
 
 #info{
-	height: 89%;
-	width: 23%;
+	height: 100%;
+	width: 25%;
 	position: fixed;
 	right: -25%;	
 	top:0;			
 	background-color: rgba(0,0,0,0.5);
 	color:#fff;
-	padding: 1%;
 	cursor: default;
 	overflow: scroll;
-	padding-bottom: 10%;
 }
 
 #brand{
 	font-size: 12px;
-	margin-bottom: 1%;	
 	font-weight: 100;	
-	letter-spacing: 4px;					
+	letter-spacing: 4px;
+	margin: 5% 5% 1% 5%;					
 }
 
 #title{
 	font-size: 35px;
-	margin-bottom: 10%;	
+	margin: 0% 5% 10% 5%;					
 	font-weight: 900;	
 	letter-spacing: 4px;					
 }
 
 #text{
 	font-size: 15px;
-	margin-bottom: 20%;	
+	margin: 0% 5% 20% 5%;					
 }
 
 #size{
 	font-size: 20px;
-	margin-bottom: 10%;	
+	margin: 0% 5% 10% 5%;					
 	text-decoration: underline;
+}
+
+#sizes{
+	margin: 0% 5% 20% 5%;					
 }
 
 #sizes span{
