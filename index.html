@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Snowboard 3D</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				margin: 0px;
+				font-family: sans-serif;
+				cursor: pointer;
+			}
+
+			#info{
+				height: 98%;
+				width: 23%;
+				position: fixed;
+				right: 0;	
+				top:0;			
+				background-color: rgba(0,0,0,0.5);
+				color:#fff;
+				padding: 1%;
+				cursor: default;
+			}
+
+			#brand{
+				font-size: 12px;
+				margin-bottom: 1%;	
+				font-weight: 100;	
+				letter-spacing: 4px;					
+			}
+
+			#title{
+				font-size: 35px;
+				margin-bottom: 10%;	
+				font-weight: 900;	
+				letter-spacing: 4px;					
+			}
+
+			#text{
+				font-size: 15px;
+				margin-bottom: 20%;	
+			}
+
+			#size{
+				font-size: 20px;
+				margin-bottom: 10%;	
+				text-decoration: underline;
+			}
+
+			#sizes span{
+				padding: 5px 10px;
+				border: 1px solid white;
+				margin-right: 1%;
+			}
+
+
+
+
+
+			#progress {
+				color:red;
+				top:1em;
+				width: 100%;
+				font-size:3em;
+				position:absolute;
+				z-index:100;
+				text-align: center;
+				text-shadow: #000 0px 0px 10px;
+				//display:none;
+				position: fixed;
+			}
+
+			.shadow {
+				-moz-box-shadow: 0px 0px 5px #000;
+				-webkit-box-shadow: 0px 0px 5px #000;
+				box-shadow: 0px 0px 5px #000;
+			}
+
+			#progressbar {
+				text-align: center;
+				background: white;
+				width: 250px;
+				height: 10px;
+			}
+
+			#bar {
+				background:#d00;
+				width:50px;
+				height:10px;
+			}
+
+
+		</style>
+	</head>
+
+	<body>
+		<script src="js/three.min.js"></script>
+		<script src="js/OrbitControls.js"></script>
+		<script src="js/ColladaLoader.js"></script>
+		<script src="js/DDSLoader.js"></script>
+		<script src="js/SceneLoader.js"></script>
+
+		<script type="application/x-glsl" id="sky-vertex">  
+			varying vec2 vUV;
+
+			void main() {  
+			  vUV = uv;
+			  vec4 pos = vec4(position, 1.0);
+			  gl_Position = projectionMatrix * modelViewMatrix * pos;
+			}
+		</script>
+		<script type="application/x-glsl" id="sky-fragment">  
+			uniform sampler2D texture;  
+			varying vec2 vUV;
+
+			void main() {  
+			  vec4 sample = texture2D(texture, vUV);
+			  gl_FragColor = vec4(sample.xyz, sample.w);
+			}
+		</script> 
+
+		<script>
+
+			var camera, controls, scene, renderer;
+
+			var callbackProgress, callbackFinished;
+
+			init();
+			
+			function init() {
+
+				renderer = new THREE.WebGLRenderer({antialias: true});
+				renderer.setClearColor( 0xdddddd );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				document.body.appendChild( renderer.domElement );
+
+				scene = new THREE.Scene();
+
+				setUpCamera();				
+
+				addMesh();
+
+				setUpSkyDome();
+
+				setUpLights();
+
+				setUpControls();
+				window.addEventListener( 'resize', onWindowResize, false );			
+
+			}
+
+			function animate() {
+				requestAnimationFrame( animate );
+				render();
+			}
+
+			function render() {
+				renderer.render( scene, camera );
+			}
+
+			function setUpCamera(){
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 600 );
+				camera.position.z = 100;
+			}
+
+			function addMesh(url){
+
+				var loaderDae = new THREE.ColladaLoader();
+
+				var percent = Math.round(loaderDae.loaded / loaderDae.total) * 100;
+				console.log(percent);
+
+				loaderDae.load( 'assets/models/board.dae', function ( collada ) {
+
+					mesh2 = collada.scene;
+					
+					var geometry = mesh2.children[0].children[0].geometry
+					var material =  new THREE.MeshBasicMaterial();
+
+					var textureLoader = new THREE.TextureLoader();			
+					material.map    = textureLoader.load('assets/textures/board/texture2.jpg');
+					material.map.minFilter = THREE.LinearFilter;
+
+					mesh = new THREE.Mesh( geometry, material );	
+					mesh.scale.x = mesh.scale.y = mesh.scale.z = 10;
+					mesh.rotation.x = Math.PI/2;					
+
+					scene.add( mesh );
+
+					animate();
+
+				},
+				// Function called when download progresses
+				function ( xhr ) {
+					console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+				});
+			}
+
+			function setUpSkyDome(){
+			    
+			    var uniforms = {
+			        texture: { type: 't', value: THREE.ImageUtils.loadTexture('assets/textures/dome/blur/lab.jpg') }
+			    };
+			    var skyMaterial = new THREE.ShaderMaterial( {
+			        uniforms: uniforms,
+			        vertexShader: document.getElementById('sky-vertex').textContent, fragmentShader: document.getElementById('sky-fragment').textContent
+			    });
+
+			    // create Mesh with sphere geometry and add to the scene
+			    var skyBox = new THREE.Mesh(new THREE.SphereGeometry(250, 60, 40), skyMaterial);
+			    skyBox.scale.set(-1, 1, 1);
+			    skyBox.rotation.order = 'XZY';
+			    skyBox.renderOrder = 500.0;
+
+			    skyBox.name = "skyDome";
+
+			    this.scene.add(skyBox);
+			}
+
+			function setUpLights(){
+
+				var colorGround = 0x999999;
+				var colorSKy = 0x999999;
+
+				hemiLight = new THREE.HemisphereLight( colorSKy, colorGround, 0.6 );				
+				hemiLight.position.set( 0, 500, 0 );
+				scene.add( hemiLight );
+
+				dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
+				dirLight.position.set( -1, 1.75, 1 );
+				dirLight.position.multiplyScalar( 50 );
+				scene.add( dirLight );
+			}
+
+			function setUpControls(){
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+				controls.enableDamping = true;
+				controls.dampingFactor = 0.25;
+				controls.enableZoom = true;
+
+				controls.minDistance = 30;
+				controls.maxDistance = 100;
+			}
+
+			function onWindowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+		</script>
+
+		<div id="progress">
+			<span id="message">Loading ...</span>
+			<center>
+				<div id="progressbar" class="shadow">
+					<div id="bar" ></div>
+				</div>
+			</center>
+		</div>
+
+		<div id="info">
+			<div id="brand">Burton's</div>
+			<div id="title">PROCESS</div>
+			<div id="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vulputate est ligula, vitae porta nulla cursus vel. Morbi dictum lectus et nibh sodales lobortis. Maecenas porta, erat in tincidunt pretium, dui magna vulputate risus, sit amet imperdiet mi risus ac ipsum. Curabitur eu odio enim. Donec urna urna, tristique et dignissim sed, rhoncus et justo. Duis faucibus ac velit sed molestie. Phasellus vestibulum, orci quis iaculis facilisis, nibh sem sagittis turpis, sed dignissim magna nisl sed metus.
+			</div>
+
+			<div id="size">SIZE</div>
+			<div id="sizes">
+				<span>155</span><span>156</span><span>165</span><span>166</span>
+			</div>
+		</div>
+	</body>
+</html>
